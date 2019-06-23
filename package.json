@@ -6,7 +6,7 @@
     "precompile": "rm -rf dist",
     "compile": "tsc",
     "test": "jest",
-    "postinstall": "auto/postinstall"
+    "pretest": "auto/pretest"
   },
   "files": [
     "/dist"
