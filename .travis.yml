@@ -1,6 +1,10 @@
 language: node_js
+install:
+  - yarn install
 node_js:
   - "6"
   - "8"
   - "10"
   - "12"
+script:
+  - yarn test

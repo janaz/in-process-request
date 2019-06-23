@@ -4,7 +4,8 @@
   "license": "(MIT OR Apache-2.0)",
   "scripts": {
     "compile": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "auto/postinstall"
   },
   "files": [
     "/dist"
