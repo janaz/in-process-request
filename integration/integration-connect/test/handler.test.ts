@@ -8,7 +8,6 @@ describe('handler function', () => {
     const reqOptions = {
       method: 'GET',
       path: '/notfound',
-      headers: {},
     };
     return H(reqOptions).then((res) => {
       expect(res.statusCode).toEqual(404);

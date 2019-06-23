@@ -7,8 +7,7 @@ describe('handler function', () => {
   it('returns 404 if not found', () => {
     const reqOptions = {
       method: 'GET',
-      path: '/notfound',
-      headers: {},
+      path: '/notfound'
     };
     return H(reqOptions).then((res) => {
       expect(res.statusCode).toEqual(404);

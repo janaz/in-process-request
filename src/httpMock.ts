@@ -1,10 +1,10 @@
 import { IncomingHttpHeaders, OutgoingHttpHeaders, ServerResponse, IncomingMessage } from 'http';
 
 export interface MockRequestOptions {
-  body: string | Buffer | undefined
   method: string
   path: string
-  headers: IncomingHttpHeaders
+  body?: string | Buffer
+  headers?: IncomingHttpHeaders
   remoteAddress?: string
   remotePort?: number
   ssl?: boolean
@@ -73,7 +73,7 @@ export const createMockRequest = (opts: MockRequestOptions): IncomingMessage => 
 
   req.method = opts.method.toUpperCase();
   req.url = opts.path;
-  req.headers = keysToLowerCase(opts.headers);
+  req.headers = keysToLowerCase(opts.headers || {});
   req.connection = {
     remoteAddress: opts.remoteAddress || '123.123.123.123',
     remotePort: opts.remotePort || 5757,
