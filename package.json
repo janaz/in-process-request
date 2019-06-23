@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "license": "(MIT OR Apache-2.0)",
   "scripts": {
+    "precompile": "rm -rf dist",
     "compile": "tsc",
     "test": "jest",
     "postinstall": "auto/postinstall"

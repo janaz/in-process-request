@@ -2,9 +2,18 @@ language: node_js
 install:
   - yarn install
 node_js:
-  - "6"
-  - "8"
-  - "10"
-  - "12"
+  - '6'
+  - '8'
+  - '10'
+  - '12'
 script:
   - yarn test
+before_deploy:
+  - yarn compile
+deploy:
+  provider: npm
+  email: janaz9@gmail.com
+  api_key:
+    secure: fJ3rLpBBdq7nK9DcJ4JsdS7TgzVVxuxKnrZJLMmg0mUSfnal2PoEUHyTFknNElvaliHH+TOjbS/Y+4YoRtrTL/K99oTglHwScronDC8XDGUKEpWQfYKfVftleYRoKgEZmA523P+2o7YX2cVK5iXZZvHZCEV2QS1F4Cfd/4IOYHm7LWG3Y7wPAP5R39SXQWDaSPWkOJjHoVs2E2pfkn3WeOB6+Xme3z3wKdQjTKGhroqeXZXv2zC3LN0ftyWMR5MFcVNmK2YucwpoAmXljFZVx4pW/wivkgvvLE3C4wUP0ifreSuAVGjgdS8I3tVBSwifhjr2ANARW2Cul0dBAwUHjmaI7BXagKnnxIPw7d9VYoBemP26oYWtkvwY4tgJ4+YA4opFt3P5PV2jpjjY/7uFZdzbkXA16WJLhjQr8L0Fl9C41GT9VCXrH9DMrf8Cid1Q00LEFctDZtVOa44BobeMevpxc2gihK70QCHqVZcOna6+zc0829ATa76+bqBhofo1gbiFAzF7dGBPqly7I9gpJaUqM24P4yamgETiu8k2Iaqx3ENEn+90yFHTin5GN52Zj5QWEWE7ye+/V/ruyCRLt8WXaQVNKGc7T028Wtbq1JQoIbbj4W8eA+KCUYSbcKpax1LyaMNTtw2T7xY3CUJ5ZfBSGoq/TS2l8yiv4DOiLac=
+  on:
+    tags: true
