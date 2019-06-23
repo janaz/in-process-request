@@ -1,4 +1,3 @@
 #!/usr/bin/env sh
 yarn install --cwd integration/integration-express
 yarn install --cwd integration/integration-connect
-

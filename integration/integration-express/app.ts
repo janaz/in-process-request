@@ -1,19 +1,17 @@
-const connect = require('connect');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const static = require('serve-static');
+import express from 'express';
+import path from 'path';
+import cookieParser from 'cookie-parser';
 
-const app = connect();
+const app = express();
 
 app.use(cookieParser());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-app.use("/static", static(path.join(__dirname, 'public')));
-app.use("/reflect", (req, res) => {
-  res.setHeader("content-type", "application/json");
-  res.end(JSON.stringify({
+app.use("/static", express.static(path.join(__dirname, 'public')));
+
+app.use('/reflect', (req, res) => {
+  res.json({
       body: req.body,
       cookies: req.cookies,
       fresh: req.fresh,
@@ -33,8 +31,8 @@ app.use("/reflect", (req, res) => {
       baseUrl: req.baseUrl,
       path: req.path,
       url: req.url,
-      xForwardedFor: req.headers['x-forwarded-for'],
-  }))
+      xForwardedFor: req.get('x-forwarded-for'),
+  });
 });
 
 module.exports = app;

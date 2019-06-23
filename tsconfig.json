@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "allowJs": true,
+    "allowJs": false,
     "noImplicitAny": true,
     "strictNullChecks": true,
     "noUnusedParameters": true,
@@ -12,6 +12,7 @@
     "baseUrl": "./src",
     "outDir": "./dist/compile",
     "strict": true,
+    "declaration": true,
     "lib": ["es6", "es2016.array.include"]
   },
   "include": ["./src/**/*"]
