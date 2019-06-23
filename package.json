@@ -1,0 +1,25 @@
+{
+  "name": "in-process-request",
+  "version": "0.0.1",
+  "license": "(MIT OR Apache-2.0)",
+  "scripts": {
+    "compile": "tsc",
+    "test": "jest"
+  },
+  "files": [
+    "/dist"
+  ],
+  "main": "./dist/compile/handler",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.15",
+    "@types/node": "^12.0.8",
+    "cookie-parser": "^1.4.4",
+    "express": "^4.17.1",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.2"
+  }
+}
