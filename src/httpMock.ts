@@ -1,7 +1,7 @@
 import { IncomingHttpHeaders, OutgoingHttpHeaders, ServerResponse, IncomingMessage } from 'http';
 
 export interface MockRequestOptions {
-  body: string | Buffer
+  body: string | Buffer | undefined
   method: string
   path: string
   headers: IncomingHttpHeaders

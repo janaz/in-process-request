@@ -6,7 +6,6 @@ const H = handler(app as any);
 describe('handler function', () => {
   it('returns 404 if not found', () => {
     const reqOptions = {
-      body: '',
       method: 'GET',
       path: '/notfound',
       headers: {},
