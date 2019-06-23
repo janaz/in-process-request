@@ -1,4 +1,5 @@
 import { IncomingHttpHeaders, OutgoingHttpHeaders, ServerResponse, IncomingMessage } from 'http';
+import getHeaders from './getHeaders';
 
 export interface MockRequestOptions {
   method: string
@@ -53,7 +54,7 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
   res.end = (chunk: any) => {
     addChunk(chunk);
     const responseBody = Buffer.concat(chunks);
-    const headers = Object.assign({}, res.getHeaders());
+    const headers = Object.assign({}, getHeaders(res));
     const response: MockResponse = {
       body: responseBody,
       isUTF8: !!(headers['content-type'] as string || '').match(/charset=utf-8/i),
