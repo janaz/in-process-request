@@ -1,6 +1,6 @@
 {
   "name": "in-process-request",
-  "version": "0.0.1",
+  "version": "0.0.1-beta.0",
   "license": "(MIT OR Apache-2.0)",
   "scripts": {
     "precompile": "rm -rf dist",
@@ -12,8 +12,7 @@
     "/dist"
   ],
   "main": "./dist/compile/handler",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/jest": "^24.0.15",
     "@types/node": "^12.0.8",
