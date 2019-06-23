@@ -11,12 +11,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/static", static(path.join(__dirname, 'public')));
-
-app.use('/inspect', (req, res) => {
-  res.json({
-    body: req.body,
-    node: process.version,
-    req: {
+app.use("/reflect", (req, res) => {
+  res.setHeader("content-type", "application/json");
+  res.end(JSON.stringify({
+      body: req.body,
       cookies: req.cookies,
       fresh: req.fresh,
       hostname: req.hostname,
@@ -35,9 +33,8 @@ app.use('/inspect', (req, res) => {
       baseUrl: req.baseUrl,
       path: req.path,
       url: req.url,
-      xForwardedFor: req.get('x-forwarded-for'),
-    },
-  });
+      xForwardedFor: req.headers['x-forwarded-for'],
+  }))
 });
 
 module.exports = app;
