@@ -10,11 +10,9 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/static", express.static(path.join(__dirname, 'public')));
 
-app.use('/inspect', (req, res) => {
+app.use('/reflect', (req, res) => {
   res.json({
-    body: req.body,
-    node: process.version,
-    req: {
+      body: req.body,
       cookies: req.cookies,
       fresh: req.fresh,
       hostname: req.hostname,
@@ -34,7 +32,6 @@ app.use('/inspect', (req, res) => {
       path: req.path,
       url: req.url,
       xForwardedFor: req.get('x-forwarded-for'),
-    },
   });
 });
 
