@@ -2,7 +2,12 @@ import { RequestListener} from 'http';
 
 import { MockResponse, MockRequestOptions, createMockRequest, createMockResponse} from './httpMock';
 
-export default (app: RequestListener) => (reqOptions: MockRequestOptions) => {
+declare namespace handler {
+  type InProcessRequestOptions = MockRequestOptions;
+  type InProcessResponse = MockResponse;
+}
+
+const handler = (app: RequestListener) => (reqOptions: MockRequestOptions) => {
   return new Promise<MockResponse>((resolve) => {
     const req = createMockRequest(reqOptions);
     const res = createMockResponse(req);
@@ -10,3 +15,7 @@ export default (app: RequestListener) => (reqOptions: MockRequestOptions) => {
     app(req, res);
   });
 }
+
+handler.default = handler;
+
+export = handler;
