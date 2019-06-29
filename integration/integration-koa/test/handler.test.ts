@@ -19,32 +19,30 @@ describe('handler function', () => {
       method: 'GET',
       path: '/reflect',
       headers: {
-        'content-type': 'application/json'
+        'content-type': 'application/json',
+        'host': 'www.google.com',
+        'origin': 'https://www.google.com',
       },
+      ssl: true,
       body: JSON.stringify({hello: "world"})
     };
     return H(reqOptions).then((res) => {
       expect(JSON.parse(res.body.toString())).toEqual({
-        baseUrl: "/reflect",
-        body:  {
+        body: {
           hello: "world",
         },
-        cookies: {},
         fresh: false,
+        host: "www.google.com",
+        hostname: "www.google.com",
         ip: "123.123.123.123",
         ips: [],
-        method: "GET",
+        origin: "https://www.google.com",
         originalUrl: "/reflect",
-        params: {},
-        path: "/",
-        protocol: "http",
-        query: {},
-        secure: false,
-        signedCookies: {},
+        path: "/reflect",
+        protocol: "https",
         stale: true,
-        subdomains: [],
-        url: "/",
-        xhr: false,
+        subdomains: ["www"],
+        url: "/reflect",
       });
     });
   })
@@ -70,7 +68,7 @@ describe('handler function', () => {
     };
     return H(reqOptions).then((res) => {
       expect(res.statusCode).toEqual(200);
-      expect(res.headers['content-type']).toEqual('text/plain; charset=UTF-8');
+      expect(res.headers['content-type']).toEqual('text/plain; charset=utf-8');
       expect(res.body.toString()).toEqual('hello world\n');
     });
   })

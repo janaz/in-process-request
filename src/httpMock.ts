@@ -46,13 +46,23 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
 
   const addChunk = (chunk: string | Buffer | undefined, encoding?: string) => chunks.push(toBuffer(chunk, encoding));
 
-  res.write = (chunk: string | Buffer) => {
-    addChunk(chunk);
+  res.write = (chunk: any, encodingOrCallback?: any, maybeCallback?: any) => {
+    const encoding = typeof encodingOrCallback === 'string' ? encodingOrCallback : undefined;
+    const callback = typeof maybeCallback === 'function' ? maybeCallback: encodingOrCallback;
+    addChunk(chunk, encoding);
+    if (typeof callback === 'function') {
+      callback();
+    }
     return true;
   }
 
-  const overriddenEnd = (chunk: string | Buffer | undefined, encoding?: string): void => {
+  const overriddenEnd = (chunk: string | Buffer | undefined, encodingOrCallback?: any, maybeCallback?: any): void => {
+    const encoding = typeof encodingOrCallback === 'string' ? encodingOrCallback : undefined;
+    const callback = typeof maybeCallback === 'function' ? maybeCallback: encodingOrCallback;
     addChunk(chunk, encoding);
+    if (typeof callback === 'function') {
+      callback();
+    }
     const body = Buffer.concat(chunks);
     const headers = getHeaders(res);
     const response: MockResponse = {
@@ -70,18 +80,18 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
 }
 
 export const createMockRequest = (opts: MockRequestOptions): IncomingMessage => {
-  const req = new IncomingMessage(undefined as any);
+  const socket = {
+    remoteAddress: opts.remoteAddress || '123.123.123.123',
+    remotePort: opts.remotePort || 5757,
+    encrypted: opts.ssl ? true : false,
+  };
+  const req = new IncomingMessage(socket as any);
   const body = toBuffer(opts.body);
   const contentLength = Buffer.byteLength(body);
 
   req.method = (opts.method || 'GET').toUpperCase();
   req.url = opts.path;
   req.headers = keysToLowerCase(opts.headers || {});
-  req.connection = {
-    remoteAddress: opts.remoteAddress || '123.123.123.123',
-    remotePort: opts.remotePort || 5757,
-    encrypted: opts.ssl ? true : false,
-  } as any;
 
   if (contentLength > 0 && !req.headers['content-length']) {
     req.headers['content-length'] = contentLength.toString();

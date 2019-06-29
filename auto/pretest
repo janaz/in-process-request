@@ -2,3 +2,4 @@
 yarn install --cwd integration/integration-express
 yarn install --cwd integration/integration-express-v3
 yarn install --cwd integration/integration-connect
+yarn install --cwd integration/integration-koa
