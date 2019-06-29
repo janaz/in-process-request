@@ -2,7 +2,7 @@ import { IncomingHttpHeaders, OutgoingHttpHeaders, ServerResponse, IncomingMessa
 import getHeaders from './getHeaders';
 
 export interface MockRequestOptions {
-  method: string
+  method?: string
   path: string
   body?: string | Buffer
   headers?: IncomingHttpHeaders
@@ -30,11 +30,11 @@ const keysToLowerCase = <T>(headers: ObjectWithStringKeys<T>): ObjectWithStringK
   return lowerCaseHeaders;
 }
 
-const toBuffer = (param: string | Buffer | undefined): Buffer => {
+const toBuffer = (param: string | Buffer | undefined, encoding?: string): Buffer => {
   if (Buffer.isBuffer(param)) {
     return param;
   } else if (typeof param === 'string') {
-    return Buffer.from(param);
+    return Buffer.from(param, encoding as BufferEncoding);
   } else {
     return Buffer.alloc(0);
   }
@@ -44,26 +44,28 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
   const res = new ServerResponse(req);
   const chunks: Buffer[] = [];
 
-  const addChunk = (chunk: string | Buffer) => chunks.push(toBuffer(chunk));
+  const addChunk = (chunk: string | Buffer | undefined, encoding?: string) => chunks.push(toBuffer(chunk, encoding));
 
   res.write = (chunk: string | Buffer) => {
     addChunk(chunk);
     return true;
   }
 
-  res.end = (chunk: any) => {
-    addChunk(chunk);
-    const responseBody = Buffer.concat(chunks);
+  const overriddenEnd = (chunk: string | Buffer | undefined, encoding?: string): void => {
+    addChunk(chunk, encoding);
+    const body = Buffer.concat(chunks);
     const headers = Object.assign({}, getHeaders(res));
     const response: MockResponse = {
-      body: responseBody,
+      body,
       isUTF8: !!(headers['content-type'] as string || '').match(/charset=utf-8/i),
       statusCode: res.statusCode,
-      headers: headers,
+      headers,
     }
     res.emit('prefinish');
-    res.emit('finish', response);
+    res.emit('finish');
+    res.emit('_response', response);
   }
+  res.end = overriddenEnd as any;
   return res;
 }
 
@@ -72,7 +74,7 @@ export const createMockRequest = (opts: MockRequestOptions): IncomingMessage => 
   const body = toBuffer(opts.body);
   const contentLength = Buffer.byteLength(body);
 
-  req.method = opts.method.toUpperCase();
+  req.method = (opts.method || 'GET').toUpperCase();
   req.url = opts.path;
   req.headers = keysToLowerCase(opts.headers || {});
   req.connection = {

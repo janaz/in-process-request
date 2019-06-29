@@ -11,7 +11,7 @@ const handler = (app: RequestListener) => (reqOptions: MockRequestOptions) => {
   return new Promise<MockResponse>((resolve) => {
     const req = createMockRequest(reqOptions);
     const res = createMockResponse(req);
-    res.on('finish', resolve);
+    res.on('_response', resolve);
     app(req, res);
   });
 }
