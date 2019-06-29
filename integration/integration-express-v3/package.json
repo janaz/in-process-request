@@ -1,0 +1,10 @@
+{
+  "name": "integration-express-v3",
+  "version": "1.0.0",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.1",
+    "cookie-parser": "^1.4.4",
+    "express": "3.21.2"
+  }
+}
