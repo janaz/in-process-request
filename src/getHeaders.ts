@@ -1,7 +1,7 @@
 import { OutgoingHttpHeaders } from 'http';
 
 const getHeadersLegacy = (res: any): OutgoingHttpHeaders => {
-  // In node 6 the headers were stored in `this._headers`
+  // In node 6 the headers are stored in `this._headers`
   return res._headers || {};
 }
 
