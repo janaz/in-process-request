@@ -8,6 +8,7 @@ It supports the following frameworks
 * Express.js v3
 * Express.js v4
 * Connect v3
+* Koa v2
 * More to come...
 
 It has been tested with the following node versions
