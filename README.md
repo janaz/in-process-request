@@ -50,7 +50,7 @@ handler(requestOptions)
 
 ### Express.js example
 
-```javscript
+```javascript
 const inProcessRequest = require('in-process-request')
 const express = require('express');
 
