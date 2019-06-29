@@ -54,7 +54,7 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
   const overriddenEnd = (chunk: string | Buffer | undefined, encoding?: string): void => {
     addChunk(chunk, encoding);
     const body = Buffer.concat(chunks);
-    const headers = Object.assign({}, getHeaders(res));
+    const headers = getHeaders(res);
     const response: MockResponse = {
       body,
       isUTF8: !!(headers['content-type'] as string || '').match(/charset=utf-8/i),
