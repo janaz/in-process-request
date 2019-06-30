@@ -1,12 +1,17 @@
 language: node_js
 install:
   - yarn install
-node_js:
-  - '8'
-  - '10'
-  - '12'
 script:
   - yarn test
+
+matrix:
+  include:
+    - node_js: '6'
+      env: NODE_6=yes
+    - node_js: '8'
+    - node_js: '10'
+    - node_js: '12'
+
 jobs:
   include:
     - stage: deploy
