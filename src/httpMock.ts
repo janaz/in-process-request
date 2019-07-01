@@ -40,6 +40,14 @@ const toBuffer = (param: string | Buffer | undefined, encoding?: string): Buffer
   }
 }
 
+const isUTF8 = (headers: OutgoingHttpHeaders): boolean => {
+  if (headers['content-encoding']) {
+    return false;
+  }
+  const contentType = headers['content-type'] as string || '';
+  return contentType.match(/charset=utf-8/i) ? true : false;
+};
+
 export const createMockResponse = (req: IncomingMessage): ServerResponse => {
   const res = new ServerResponse(req);
   const chunks: Buffer[] = [];
@@ -67,7 +75,7 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
     const headers = getHeaders(res);
     const response: MockResponse = {
       body,
-      isUTF8: !!(headers['content-type'] as string || '').match(/charset=utf-8/i),
+      isUTF8: isUTF8(headers),
       statusCode: res.statusCode,
       headers,
     }

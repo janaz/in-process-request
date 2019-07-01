@@ -1,5 +1,6 @@
 import handler from '../../../src/handler';
 import app = require('../app');
+import zlib from 'zlib';
 
 const H = handler(app as any);
 
@@ -88,5 +89,36 @@ describe('handler function', () => {
       expect(res.body.toString('base64')).toEqual('iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAZElEQVQ4jd2TQQqAMAwEpyV6EP//R19gvLReWgwUK0FBcY4hGZbAhgwLMAORlnQxUynH08lyjwiIGOvgFKwAwhE9Bcd1NjFu8Q2B9/vPJ/iB4N0n1i5EYMu9zZaR0kY1Ig8K6A6mlxIIums73gAAAABJRU5ErkJggg==');
     });
   })
+
+  it('works with compressed response', () => {
+    const reqOptions = {
+      method: 'GET',
+      path: '/static/big.html',
+      headers: {
+        'Accept-Encoding': 'gzip'
+      },
+    };
+
+    const gunzip = (body: Buffer): Promise<Buffer> => new Promise((resolve, reject) => {
+      zlib.gunzip(body, (error, data) => {
+        if(error) {
+          return reject(error);
+        }
+        resolve(data);
+      });
+    });
+
+    return H(reqOptions).then((res) => {
+      expect(res.statusCode).toEqual(200);
+      expect(res.headers['content-type']).toEqual('text/html; charset=UTF-8');
+      expect(res.headers['content-encoding']).toEqual('gzip');
+      expect(res.isUTF8).toEqual(false);
+      return gunzip(res.body);
+    })
+    .then(body => {
+      expect(body.toString()).toMatch(/^<!DOCTYPE html>/);
+    })
+
+  });
 
 })
