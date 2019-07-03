@@ -45,7 +45,7 @@ const isUTF8 = (headers: OutgoingHttpHeaders): boolean => {
     return false;
   }
   const contentType = headers['content-type'] as string || '';
-  return contentType.match(/charset=utf-8/i) ? true : false;
+  return contentType.match(/charset=(utf-8|"utf-8")$/i) ? true : false;
 };
 
 export const createMockResponse = (req: IncomingMessage): ServerResponse => {
@@ -68,9 +68,6 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
     const encoding = typeof encodingOrCallback === 'string' ? encodingOrCallback : undefined;
     const callback = typeof maybeCallback === 'function' ? maybeCallback: encodingOrCallback;
     addChunk(chunk, encoding);
-    if (typeof callback === 'function') {
-      callback();
-    }
     const body = Buffer.concat(chunks);
     const headers = getHeaders(res);
     const response: MockResponse = {
@@ -82,6 +79,9 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
     res.emit('prefinish');
     res.emit('finish');
     res.emit('_response', response);
+    if (typeof callback === 'function') {
+      callback();
+    }
   }
 
   return res;
@@ -93,9 +93,10 @@ export const createMockRequest = (opts: MockRequestOptions): IncomingMessage => 
     remotePort: opts.remotePort || 5757,
     encrypted: opts.ssl ? true : false,
   };
-  const req = new IncomingMessage(socket as any);
   const body = toBuffer(opts.body);
   const contentLength = Buffer.byteLength(body);
+
+  const req = new IncomingMessage(socket as any);
 
   req.method = (opts.method || 'GET').toUpperCase();
   req.url = opts.path;
