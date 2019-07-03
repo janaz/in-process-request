@@ -64,7 +64,7 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
     return true;
   }
 
-  const overriddenEnd = (chunk: string | Buffer | undefined, encodingOrCallback?: any, maybeCallback?: any): void => {
+  res.end = (chunk: any, encodingOrCallback?: any, maybeCallback?: any): void => {
     const encoding = typeof encodingOrCallback === 'string' ? encodingOrCallback : undefined;
     const callback = typeof maybeCallback === 'function' ? maybeCallback: encodingOrCallback;
     addChunk(chunk, encoding);
@@ -83,7 +83,7 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
     res.emit('finish');
     res.emit('_response', response);
   }
-  res.end = overriddenEnd as any;
+
   return res;
 }
 
