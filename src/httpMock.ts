@@ -107,7 +107,9 @@ export const createMockRequest = (opts: MockRequestOptions): IncomingMessage => 
   }
 
   req._read = () => {
-    req.push(body);
+    if (contentLength > 0) {
+      req.push(body);
+    }
     req.push(null);
   }
   return req;
