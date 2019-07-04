@@ -16,6 +16,4 @@ const handler = (app: RequestListener) => (reqOptions: MockRequestOptions) => {
   });
 }
 
-handler.default = handler;
-
 export = handler;
