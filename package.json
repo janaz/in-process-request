@@ -1,6 +1,6 @@
 {
   "name": "in-process-request",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "license": "(MIT OR Apache-2.0)",
   "scripts": {
     "precompile": "rm -rf dist",
