@@ -11,6 +11,17 @@
   "files": [
     "/dist"
   ],
+  "keywords": [
+    "express",
+    "expressjs",
+    "koa",
+    "connect",
+    "http",
+    "request",
+    "response",
+    "mock",
+    "test"
+  ],
   "main": "./dist/compile/handler",
   "types": "./dist/compile/handler.d.ts",
   "dependencies": {},
