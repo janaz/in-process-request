@@ -7,6 +7,7 @@ A node.js library that executes a http handler function in the current process w
 It supports the following frameworks
 * Express.js v3
 * Express.js v4
+* Express.js v5
 * Connect v3
 * Koa v2
 * More to come...
