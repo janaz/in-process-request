@@ -61,7 +61,7 @@ myApp.get('/test', (req, res) => {
   res.json({ok: true, a: req.query.a});
 });
 
-cons myAppHandler = inProcessRequest(myApp);
+const myAppHandler = inProcessRequest(myApp);
 
 const requestOptions = {
   path: '/test',
