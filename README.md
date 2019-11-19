@@ -17,6 +17,7 @@ It has been tested with the following node versions
 * v8
 * v10
 * v12
+* v13
 
 ## Usage
 
