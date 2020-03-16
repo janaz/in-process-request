@@ -13,8 +13,6 @@ It supports the following frameworks
 * More to come...
 
 It has been tested with the following node versions
-* v6
-* v8
 * v10
 * v12
 * v13

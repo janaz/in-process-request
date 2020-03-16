@@ -6,9 +6,6 @@ script:
 
 jobs:
   include:
-    - node_js: '6'
-      env: NODE_6=yes
-    - node_js: '8'
     - node_js: '10'
     - node_js: '12'
     - node_js: '13'

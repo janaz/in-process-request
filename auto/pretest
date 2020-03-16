@@ -3,8 +3,4 @@ yarn install --cwd integration/integration-express
 yarn install --cwd integration/integration-express-v3
 yarn install --cwd integration/integration-express-v5
 yarn install --cwd integration/integration-connect
-if [ "${NODE_6}" != yes ]; then
-  yarn install --cwd integration/integration-koa
-else
-  echo "Skipping KOA test in node6"
-fi
+yarn install --cwd integration/integration-koa
