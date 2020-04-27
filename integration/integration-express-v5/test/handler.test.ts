@@ -1,6 +1,9 @@
 import handler from '../../../src/handler';
 import app = require('../app');
+import { promisify } from 'util';
 import zlib from 'zlib';
+
+const gunzip = promisify<Buffer, Buffer>(zlib.gunzip)
 
 const H = handler(app as any);
 
@@ -93,15 +96,6 @@ describe('handler function', () => {
         'Accept-Encoding': 'gzip'
       },
     };
-
-    const gunzip = (body: Buffer): Promise<Buffer> => new Promise((resolve, reject) => {
-      zlib.gunzip(body, (error, data) => {
-        if(error) {
-          return reject(error);
-        }
-        resolve(data);
-      });
-    });
 
     const res = await H(reqOptions);
     expect(res.statusCode).toEqual(200);
