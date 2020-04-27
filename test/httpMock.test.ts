@@ -6,7 +6,7 @@ describe('createMockResponse', () => {
       it(`marks (${expectedValue}) response as utf-8 when content-type is ${contentTypeHeader}`, (done) => {
         const res = createMockResponse({} as any);
         res.setHeader('content-type', contentTypeHeader)
-        res.once('_response', (response: MockResponse) => {
+        res.once('__mock_response', (response: MockResponse) => {
           expect(response.isUTF8).toEqual(expectedValue);
           done();
         });
@@ -25,7 +25,7 @@ describe('createMockResponse', () => {
       const res = createMockResponse({} as any);
       res.setHeader('content-type', 'text/html;charset=utf-8')
       res.setHeader('content-encoding', 'gzip')
-      res.once('_response', (response: MockResponse) => {
+      res.once('__mock_response', (response: MockResponse) => {
         expect(response.isUTF8).toEqual(false);
         done();
       });

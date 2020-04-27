@@ -78,7 +78,7 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
     }
     res.emit('prefinish');
     res.emit('finish');
-    res.emit('_response', response);
+    res.emit('__mock_response', response);
     if (typeof callback === 'function') {
       callback();
     }
