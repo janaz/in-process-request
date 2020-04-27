@@ -8,7 +8,7 @@ jobs:
   include:
     - node_js: '10'
     - node_js: '12'
-    - node_js: '13'
+    - node_js: '14'
     - stage: deploy
       node_js: '12'
       script: skip
