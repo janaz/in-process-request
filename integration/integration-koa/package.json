@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "license": "MIT",
   "devDependencies": {
-    "@types/koa": "^2.0.52",
+    "@types/koa": "^2.11.3",
     "@types/koa-bodyparser": "^4.3.0",
     "@types/koa-mount": "^4.0.0",
-    "@types/koa-router": "^7.0.42",
+    "@types/koa-router": "^7.4.0",
     "@types/koa-static": "^4.0.1",
     "koa": "^2.11.0",
-    "koa-bodyparser": "^4.2.1",
+    "koa-bodyparser": "^4.3.0",
     "koa-mount": "^4.0.0",
-    "koa-router": "^7.4.0",
+    "koa-router": "^8.0.8",
     "koa-static": "^5.0.0"
   }
 }
