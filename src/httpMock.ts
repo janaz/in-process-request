@@ -15,6 +15,7 @@ export interface MockResponse {
   body: Buffer,
   isUTF8: boolean,
   statusCode: number,
+  statusMessage: string,
   headers: OutgoingHttpHeaders,
 }
 
@@ -28,6 +29,22 @@ const keysToLowerCase = <T>(headers: ObjectWithStringKeys<T>): ObjectWithStringK
     lowerCaseHeaders[k.toLowerCase()] = headers[k];
   });
   return lowerCaseHeaders;
+}
+
+const getRawHeaders = (headers: IncomingHttpHeaders): string[] => {
+  const rawHeaders: string[] = [];
+  Object.entries(headers).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach(v => {
+        rawHeaders.push(key);
+        rawHeaders.push(v);
+      })
+    } else if (typeof value === 'string') {
+      rawHeaders.push(key);
+      rawHeaders.push(value);
+    }
+  })
+  return rawHeaders;
 }
 
 const toBuffer = (param: string | Buffer | undefined, encoding?: string): Buffer => {
@@ -50,6 +67,7 @@ const isUTF8 = (headers: OutgoingHttpHeaders): boolean => {
 
 export const createMockResponse = (req: IncomingMessage): ServerResponse => {
   const res = new ServerResponse(req);
+  res.shouldKeepAlive = false
   const chunks: Buffer[] = [];
 
   const addChunk = (chunk: string | Buffer | undefined, encoding?: string) => chunks.push(toBuffer(chunk, encoding));
@@ -74,6 +92,7 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
       body,
       isUTF8: isUTF8(headers),
       statusCode: res.statusCode,
+      statusMessage: res.statusMessage,
       headers,
     }
     res.emit('prefinish');
@@ -101,9 +120,15 @@ export const createMockRequest = (opts: MockRequestOptions): IncomingMessage => 
   req.method = (opts.method || 'GET').toUpperCase();
   req.url = opts.path;
   req.headers = keysToLowerCase(opts.headers || {});
+  req.rawHeaders = getRawHeaders(opts.headers || {});
+  req.httpVersionMajor = 1;
+  req.httpVersionMinor = 1;
+  req.httpVersion = '1.1';
 
   if (contentLength > 0 && !req.headers['content-length']) {
     req.headers['content-length'] = contentLength.toString();
+    req.rawHeaders.push('content-length')
+    req.rawHeaders.push(contentLength.toString())
   }
 
   req._read = () => {

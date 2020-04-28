@@ -1,5 +1,35 @@
 import { MockResponse, createMockResponse, createMockRequest } from '../src/httpMock';
 
+describe('createMockRequest', () => {
+  it('creates an IncomingMessage instance', () => {
+    const req = createMockRequest({
+      path: '/my/url',
+      body: 'body',
+      remoteAddress: '1.2.3.4',
+      remotePort: 5556,
+      headers: {
+        'Content-Type': 'text/plain',
+        'X-Array': ['an', 'array'],
+      },
+      method: 'POST',
+      ssl: true,
+    })
+    expect(req.url).toEqual('/my/url')
+    expect(req.method).toEqual('POST')
+    expect(req.headers).toEqual({
+      'content-type': 'text/plain',
+      'x-array': ['an', 'array'],
+      'content-length': '4',
+    })
+    expect(req.rawHeaders).toEqual([
+      'Content-Type', 'text/plain',
+      'X-Array', 'an',
+      'X-Array', 'array',
+      'content-length', '4',
+    ])
+  })
+})
+
 describe('createMockResponse', () => {
   describe('utf-8', () => {
     const utfExampleFor = (contentTypeHeader: string, expectedValue: boolean) => {
