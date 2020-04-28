@@ -45,6 +45,7 @@ handler(requestOptions)
 
 `response` is an object with the following properties
 * `statusCode` - status code of the response
+* `statusMessage` - status message of the response
 * `headers` - object with response headers
 * `body` - `Buffer` containing the body
 * `isUTF8` - set to `true` if the response is a utf-8 string. In that case `response.body.toString()` can be used to extract the utf-8 string
@@ -71,6 +72,7 @@ myAppHandler(requestOptions).then(response => {
   console.log('Body', response.body);
   console.log('Headers', response.headers);
   console.log('Status Code', response.statusCode);
+  console.log('Status Message', response.statusMessage);
   console.log('Is UTF8 body?', response.isUTF8);
 })
 ```
