@@ -6,11 +6,4 @@ const config = {
   ]
 };
 
-if (process.env.NODE_6 === 'yes') {
-  // disable Koa integration in node 6
-  config.testPathIgnorePatterns = [
-    "/node_modules/", "/integration-koa/"
-  ];
-}
-
 module.exports = config;
