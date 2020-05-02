@@ -10,7 +10,7 @@ jobs:
     - node_js: '12'
     - node_js: '14'
     - stage: deploy
-      node_js: '12'
+      node_js: '14'
       script: skip
       before_deploy:
         - yarn compile

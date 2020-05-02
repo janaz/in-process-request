@@ -15,7 +15,7 @@ It supports the following frameworks
 It has been tested with the following node versions
 * v10
 * v12
-* v13
+* v14
 
 ## Usage
 
