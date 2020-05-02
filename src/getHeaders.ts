@@ -1,6 +1,12 @@
 import { OutgoingHttpHeaders } from 'http';
 
-const getHeadersLegacy = (res: any): OutgoingHttpHeaders => {
+interface ObjectLikeServerResponse {
+  // Old Node versions didn't have getHeaders() method
+  _headers?: OutgoingHttpHeaders
+  getHeaders?: () => OutgoingHttpHeaders
+}
+
+const getHeadersLegacy = (res: ObjectLikeServerResponse): OutgoingHttpHeaders => {
   // In node 6 the headers are stored in `this._headers`
   return res._headers || {};
 }
@@ -17,7 +23,7 @@ const fixHeaders = (headers: OutgoingHttpHeaders): OutgoingHttpHeaders => {
   return headersCopy;
 };
 
-export default (res: any): OutgoingHttpHeaders => {
+export default (res: ObjectLikeServerResponse): OutgoingHttpHeaders => {
   let headers;
   if (typeof res.getHeaders === 'function') {
     headers = res.getHeaders();

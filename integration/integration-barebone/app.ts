@@ -1,6 +1,6 @@
 import { ServerResponse, IncomingMessage } from 'http';
 
-const handler = (request: IncomingMessage, response: ServerResponse) => {
+const handler = (cb?: () => void) => (request: IncomingMessage, response: ServerResponse) => {
   response.writeHead(200, {
     'Content-Type': 'application/json'
   })
@@ -9,8 +9,8 @@ const handler = (request: IncomingMessage, response: ServerResponse) => {
     method: request.method,
     headers: request.headers,
   }
-  response.write(JSON.stringify(responseObj), 'utf8')
-  response.end()
+  response.write(JSON.stringify(responseObj), 'utf8', cb)
+  response.end(cb)
 }
 
 export = handler

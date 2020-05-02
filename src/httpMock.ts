@@ -1,6 +1,9 @@
 import { IncomingHttpHeaders, OutgoingHttpHeaders, ServerResponse, IncomingMessage } from 'http';
 import getHeaders from './getHeaders';
 
+type Chunk = string | Buffer | undefined
+type Callback = (error: Error | null | undefined) => void
+
 export interface MockRequestOptions {
   method?: string
   path: string
@@ -47,7 +50,7 @@ const getRawHeaders = (headers: IncomingHttpHeaders): string[] => {
   return rawHeaders;
 }
 
-const toBuffer = (param: string | Buffer | undefined, encoding?: string): Buffer => {
+const toBuffer = (param?: string | Buffer, encoding?: string): Buffer => {
   if (Buffer.isBuffer(param)) {
     return param;
   } else if (typeof param === 'string') {
@@ -70,21 +73,31 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
   res.shouldKeepAlive = false
   const chunks: Buffer[] = [];
 
-  const addChunk = (chunk: string | Buffer | undefined, encoding?: string) => chunks.push(toBuffer(chunk, encoding));
+  const addChunk = (chunk: Chunk, encoding?: string) => chunks.push(toBuffer(chunk, encoding));
 
-  res.write = (chunk: any, encodingOrCallback?: any, maybeCallback?: any) => {
-    const encoding = typeof encodingOrCallback === 'string' ? encodingOrCallback : undefined;
-    const callback = typeof maybeCallback === 'function' ? maybeCallback: encodingOrCallback;
+  res.write = (chunk: Chunk, encodingOrCallback?: string | Callback, maybeCallback?: Callback) => {
+    const encoding: string | Callback | undefined = typeof encodingOrCallback === 'string' ? encodingOrCallback : undefined;
+    const callback: Callback | undefined = typeof maybeCallback === 'function' ?
+      maybeCallback: (typeof encodingOrCallback === 'function' ? encodingOrCallback : undefined);
     addChunk(chunk, encoding);
-    if (typeof callback === 'function') {
-      callback();
+    if (callback) {
+      callback(null);
     }
     return true;
   }
 
-  res.end = (chunk: any, encodingOrCallback?: any, maybeCallback?: any): void => {
-    const encoding = typeof encodingOrCallback === 'string' ? encodingOrCallback : undefined;
-    const callback = typeof maybeCallback === 'function' ? maybeCallback: encodingOrCallback;
+  res.end = (chunkOrCallback?: Chunk | Callback, encodingOrCallback?: string | Callback, maybeCallback?: Callback): void => {
+    let encoding: string | undefined = undefined
+    let chunk: Chunk | undefined = undefined
+    let callback: Callback | undefined = typeof chunkOrCallback === 'function' ? chunkOrCallback : undefined
+    if (!callback) {
+      chunk = chunkOrCallback as Chunk | undefined
+      callback = typeof encodingOrCallback === 'function' ? encodingOrCallback : undefined
+    }
+    if (!callback) {
+      encoding = encodingOrCallback as string | undefined
+      callback = maybeCallback
+    }
     addChunk(chunk, encoding);
     const body = Buffer.concat(chunks);
     const headers = getHeaders(res);
@@ -98,8 +111,8 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
     res.emit('prefinish');
     res.emit('finish');
     res.emit('__mock_response', response);
-    if (typeof callback === 'function') {
-      callback();
+    if (callback) {
+      callback(null);
     }
   }
 
