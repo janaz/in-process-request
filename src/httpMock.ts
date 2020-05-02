@@ -3,6 +3,11 @@ import getHeaders from './getHeaders';
 
 type Chunk = string | Buffer | undefined
 type Callback = (error: Error | null | undefined) => void
+interface SocketMock {
+  readonly remotePort: number
+  readonly remoteAddress: string
+  readonly encrypted: boolean
+}
 
 export interface MockRequestOptions {
   method?: string
@@ -120,7 +125,7 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
 }
 
 export const createMockRequest = (opts: MockRequestOptions): IncomingMessage => {
-  const socket = {
+  const socket: SocketMock = {
     remoteAddress: opts.remoteAddress || '123.123.123.123',
     remotePort: opts.remotePort || 5757,
     encrypted: opts.ssl ? true : false,
