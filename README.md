@@ -8,6 +8,8 @@ It supports the following frameworks
 * Express.js v3
 * Express.js v4
 * Express.js v5
+* Apollo Server v2
+* Hapi v19
 * Connect v3
 * Koa v2
 * More to come...
@@ -77,6 +79,93 @@ myAppHandler(requestOptions).then(response => {
 })
 ```
 
+### Koa example
+
+```javascript
+const inProcessRequest = require('in-process-request')
+const Koa = require('koa');
+const serve = require('koa-static');
+const mount = require('koa-mount');
+const Router = require('koa-router');
+
+const koa = new Koa();
+
+const router = new Router();
+
+router.get('/test', ctx => {
+  ctx.body = "Hello"
+});
+
+koa.use(router.routes());
+
+// koa.callback() returns the requestListener functions
+const myApp = koa.callback();
+
+const myAppHandler = inProcessRequest(myApp);
+
+const requestOptions = {
+  path: '/test',
+  method: 'GET',
+}
+
+myAppHandler(requestOptions).then(response => {
+  console.log('Body', response.body);
+  console.log('Headers', response.headers);
+  console.log('Status Code', response.statusCode);
+  console.log('Status Message', response.statusMessage);
+  console.log('Is UTF8 body?', response.isUTF8);
+})
+```
+
+### Hapi example
+
+In order to get access to the `requestListener` function in Hapi we need to use custom `listener` object. The `in-process-request` module comes with a helper class `HapiListener` that makes it easy. An instance of this class is used as the listener and the `handler` property of that instance provides the request listener function.
+
+```javascript
+const inProcessRequest = require('in-process-request')
+const Hapi = require('@hapi/hapi');
+
+// create custom listener for Hapi
+const myListener = new inProcessRequest.HapiListener()
+
+// Pass the custom listener to Hapi.server
+const server = Hapi.server({
+  listener: myListener
+});
+
+server.route({
+  method: 'GET',
+  path: '/',
+  handler: (_request: any, _h: any) => {
+      return 'Hello World!';
+  }
+});
+
+const waitForServer = async () => {
+  //wait for the server to initialize
+  await server.start()
+  // return the request listener function
+  return myListener.handler
+}
+
+waitForServer().then((myApp) => {
+  // The server is initialized and we have access to the request handler - myApp
+  const myAppHandler = inProcessRequest(myApp);
+
+  const requestOptions = {
+    path: '/test',
+    method: 'GET',
+  }
+
+  myAppHandler(requestOptions).then(response => {
+    console.log('Body', response.body);
+    console.log('Headers', response.headers);
+    console.log('Status Code', response.statusCode);
+    console.log('Status Message', response.statusMessage);
+    console.log('Is UTF8 body?', response.isUTF8);
+  })
+})
+```
 
 ## Usage in integration tests
 

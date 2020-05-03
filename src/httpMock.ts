@@ -1,5 +1,6 @@
 import { IncomingHttpHeaders, OutgoingHttpHeaders, ServerResponse, IncomingMessage } from 'http';
 import getHeaders from './getHeaders';
+export { HapiListener } from './hapiListener';
 
 type Chunk = string | Buffer | undefined
 type Callback = (error: Error | null | undefined) => void
@@ -7,6 +8,8 @@ interface SocketMock {
   readonly remotePort: number
   readonly remoteAddress: string
   readonly encrypted: boolean
+  readonly end: () => void
+  readonly destroy: (e?: Error) => void
 }
 
 export interface MockRequestOptions {
@@ -129,7 +132,9 @@ export const createMockRequest = (opts: MockRequestOptions): IncomingMessage => 
     remoteAddress: opts.remoteAddress || '123.123.123.123',
     remotePort: opts.remotePort || 5757,
     encrypted: opts.ssl ? true : false,
-  };
+    end: () => {},
+    destroy: () => {},
+  }
   const body = toBuffer(opts.body);
   const contentLength = Buffer.byteLength(body);
 

@@ -4,9 +4,8 @@ import mount from 'koa-mount';
 import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
 import path  from 'path';
-const app = new Koa();
 
-// logger
+const app = new Koa();
 
 app.use(async (ctx, next) => {
   const start = Date.now();
