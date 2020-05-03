@@ -1,6 +1,5 @@
 import { IncomingHttpHeaders, OutgoingHttpHeaders, ServerResponse, IncomingMessage } from 'http';
 import getHeaders from './getHeaders';
-export { HapiListener } from './hapiListener';
 
 type Chunk = string | Buffer | undefined
 type Callback = (error: Error | null | undefined) => void

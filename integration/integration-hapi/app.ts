@@ -1,6 +1,6 @@
 
 const Hapi = require('@hapi/hapi');
-import { HapiListener } from '../../src/httpMock';
+import { HapiListener } from '../../src/handler';
 
 const myListener = new HapiListener()
 
