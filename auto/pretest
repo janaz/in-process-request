@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
-yarn install --cwd integration/integration-apollo
-yarn install --cwd integration/integration-hapi
-yarn install --cwd integration/integration-express
-yarn install --cwd integration/integration-express-v3
-yarn install --cwd integration/integration-express-v5
-yarn install --cwd integration/integration-connect
-yarn install --cwd integration/integration-koa
+npm ci --prefix integration/integration-apollo
+npm ci --prefix integration/integration-hapi
+npm ci --prefix integration/integration-express
+npm ci --prefix integration/integration-express-v3
+npm ci --prefix integration/integration-express-v5
+npm ci --prefix integration/integration-connect
+npm ci --prefix integration/integration-koa
