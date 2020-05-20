@@ -6,3 +6,4 @@ npm ci --prefix integration/integration-express-v3
 npm ci --prefix integration/integration-express-v5
 npm ci --prefix integration/integration-connect
 npm ci --prefix integration/integration-koa
+npm ci --prefix integration/integration-nestjs
