@@ -2,6 +2,7 @@ import { RequestListener} from 'http';
 
 import { MockResponse, MockRequestOptions, createMockRequest, createMockResponse} from './httpMock';
 import { HapiListener } from './hapiListener';
+import nestHandler from './nestHandler';
 
 declare namespace handler {
   type InProcessRequestOptions = MockRequestOptions;
@@ -18,5 +19,6 @@ const handler = (app: RequestListener) => (reqOptions: MockRequestOptions) => {
 }
 
 handler.HapiListener = HapiListener
+handler.nestHandler = nestHandler
 
 export = handler;

@@ -10,6 +10,7 @@ It supports the following frameworks
 * Express.js v5
 * Apollo Server v2
 * Hapi v19
+* NestJS v7
 * Connect v3
 * Koa v2
 * More to come...
@@ -153,7 +154,58 @@ waitForServer().then((myApp) => {
   const myAppHandler = inProcessRequest(myApp);
 
   const requestOptions = {
-    path: '/test',
+    path: '/',
+    method: 'GET',
+  }
+
+  myAppHandler(requestOptions).then(response => {
+    console.log('Body', response.body);
+    console.log('Headers', response.headers);
+    console.log('Status Code', response.statusCode);
+    console.log('Status Message', response.statusMessage);
+    console.log('Is UTF8 body?', response.isUTF8);
+  })
+})
+```
+
+### NestJS example
+
+This library provides a handy adapter for retrieving the underlying Express instance, which is needed for using this library to send requests to NestJS app.
+
+```typescript
+import inProcessRequest from 'in-process-request'
+
+import { NestFactory } from '@nestjs/core';
+import { Module, Get, Controller } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
+// import nestHandler from '../../../src/nestHandler'
+
+@Controller()
+class AppController {
+  @Get()
+  render() {
+    return { hello: 'world' };
+  }
+}
+
+@Module({
+  imports: [],
+  controllers: [AppController],
+})
+class AppModule {}
+
+const getApp = async () => {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  return await inProcessRequest.nestHandler(app);
+}
+
+getApp().then((myApp) => {
+  // The server is initialized and we have access to the request handler - myApp
+  const myAppHandler = inProcessRequest(myApp);
+
+  const requestOptions = {
+    path: '/',
     method: 'GET',
   }
 
