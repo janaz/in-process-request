@@ -20,7 +20,6 @@ It has been tested with the following node versions
 * v10
 * v12
 * v14
-* v15
 
 ## Usage
 
