@@ -10,6 +10,7 @@ It supports the following frameworks
 * Express.js v5
 * Apollo Server v2
 * Hapi v19
+* Hapi v20
 * NestJS v7
 * Connect v3
 * Koa v2

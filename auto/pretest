@@ -1,9 +1,10 @@
 #!/usr/bin/env sh
 npm ci --prefix integration/integration-apollo
-npm ci --prefix integration/integration-hapi
+npm ci --prefix integration/integration-connect
 npm ci --prefix integration/integration-express
 npm ci --prefix integration/integration-express-v3
 npm ci --prefix integration/integration-express-v5
-npm ci --prefix integration/integration-connect
+npm ci --prefix integration/integration-hapi-19
+npm ci --prefix integration/integration-hapi-20
 npm ci --prefix integration/integration-koa
 npm ci --prefix integration/integration-nestjs
