@@ -14,6 +14,7 @@ It supports the following frameworks
 * NestJS v7
 * Connect v3
 * Koa v2
+* Polka
 * More to come...
 
 It has been tested with the following node versions
@@ -217,6 +218,33 @@ getApp().then((myApp) => {
     console.log('Status Message', response.statusMessage);
     console.log('Is UTF8 body?', response.isUTF8);
   })
+})
+```
+
+### Polka example
+
+```javascript
+const inProcessRequest = require('in-process-request')
+const polka = require('polka');
+
+const myApp = polka();
+myApp.get('/test', (req, res) => {
+  res.json({ok: true, a: req.query.a});
+});
+
+const myAppHandler = inProcessRequest(myApp.handler.bind(myApp));
+
+const requestOptions = {
+  path: '/test',
+  method: 'GET',
+}
+
+myAppHandler(requestOptions).then(response => {
+  console.log('Body', response.body);
+  console.log('Headers', response.headers);
+  console.log('Status Code', response.statusCode);
+  console.log('Status Message', response.statusMessage);
+  console.log('Is UTF8 body?', response.isUTF8);
 })
 ```
 

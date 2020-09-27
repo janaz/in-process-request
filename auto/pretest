@@ -8,3 +8,4 @@ npm ci --prefix integration/integration-hapi-19
 npm ci --prefix integration/integration-hapi-20
 npm ci --prefix integration/integration-koa
 npm ci --prefix integration/integration-nestjs
+npm ci --prefix integration/integration-polka
