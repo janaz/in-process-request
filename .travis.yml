@@ -9,6 +9,7 @@ jobs:
     - node_js: '10'
     - node_js: '12'
     - node_js: '14'
+    - node_js: '15'
     - stage: deploy
       node_js: '14'
       script: skip
