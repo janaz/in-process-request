@@ -15,6 +15,7 @@ It supports the following frameworks
 * Connect v3
 * Koa v2
 * Polka
+* Fastify v3
 * More to come...
 
 It has been tested with the following node versions
@@ -181,7 +182,6 @@ import inProcessRequest from 'in-process-request'
 import { NestFactory } from '@nestjs/core';
 import { Module, Get, Controller } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
-// import nestHandler from '../../../src/nestHandler'
 
 @Controller()
 class AppController {
@@ -204,6 +204,43 @@ const getApp = async () => {
 }
 
 getApp().then((myApp) => {
+  // The server is initialized and we have access to the request handler - myApp
+  const myAppHandler = inProcessRequest(myApp);
+
+  const requestOptions = {
+    path: '/',
+    method: 'GET',
+  }
+
+  myAppHandler(requestOptions).then(response => {
+    console.log('Body', response.body);
+    console.log('Headers', response.headers);
+    console.log('Status Code', response.statusCode);
+    console.log('Status Message', response.statusMessage);
+    console.log('Is UTF8 body?', response.isUTF8);
+  })
+})
+```
+
+### Fastify example
+
+This library provides an adapter for retrieving the underlying NodeJS server handler
+
+```javascript
+const fastify = require('fastify');
+const inProcessRequest = require('in-process-request')
+
+const build = (options) => {
+  const app = fastify(options)
+  app.get('/', async (_request, reply) => {
+    return { hello: 'world' }
+  })
+
+  return app;
+}
+
+const fastifyOpts = {logger: false};
+inProcessRequest.fastifyHandler(build)(fastifyOpts).then((myApp) => {
   // The server is initialized and we have access to the request handler - myApp
   const myAppHandler = inProcessRequest(myApp);
 
