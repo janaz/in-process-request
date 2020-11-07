@@ -37,7 +37,6 @@ describe('handler function', () => {
       expect(Buffer.byteLength(res.body)).toEqual(178);
       expect(res.headers["content-length"]).toEqual("178")
       expect(res.headers["content-type"]).toEqual("image/png")
-      expect(res.headers["etag"]).toEqual('W/"b2-16ccddb80b5"')
     })
     it('returns a html file', async () => {
       const reqOptions = {
@@ -50,7 +49,6 @@ describe('handler function', () => {
       expect(Buffer.byteLength(res.body)).toEqual(98);
       expect(res.headers["content-length"]).toEqual("98")
       expect(res.headers["content-type"]).toEqual("text/html; charset=UTF-8")
-      expect(res.headers["etag"]).toEqual('W/"62-16ccddb80b5"')
     })
   })
 })
