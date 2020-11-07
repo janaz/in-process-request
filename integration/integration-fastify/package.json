@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "license": "MIT",
   "devDependencies": {
-    "fastify": "^3.7.0"
+    "fastify": "^3.7.0",
+    "fastify-cookie": "^4.1.0",
+    "fastify-static": "^3.3.0"
   }
 }
