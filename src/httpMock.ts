@@ -1,5 +1,4 @@
 import { IncomingHttpHeaders, OutgoingHttpHeaders, ServerResponse, IncomingMessage } from 'http';
-import getHeaders from './getHeaders';
 
 type Chunk = string | Buffer | undefined
 type Callback = (error: Error | null | undefined) => void
@@ -79,8 +78,8 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
   const res = new ServerResponse(req);
   res.shouldKeepAlive = false
   const chunks: Buffer[] = [];
-
   const addChunk = (chunk: Chunk, encoding?: string) => chunks.push(toBuffer(chunk, encoding));
+  const headers: OutgoingHttpHeaders = {};
 
   res.write = (chunk: Chunk, encodingOrCallback?: string | Callback, maybeCallback?: Callback) => {
     const encoding: string | Callback | undefined = typeof encodingOrCallback === 'string' ? encodingOrCallback : undefined;
@@ -91,6 +90,15 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
       callback(null);
     }
     return true;
+  }
+
+  res.setHeader('___internal___', '___internal___');
+
+  const originalSetHeader = res.setHeader.bind(res);
+  res.setHeader = (name: string, value: string | number | string[]): void => {
+    originalSetHeader(name, value);
+    const strVal: string | string[] = (typeof value === 'number') ? String(value) : value;
+    headers[name.toLowerCase()] = strVal;
   }
 
   res.end = (chunkOrCallback?: Chunk | Callback, encodingOrCallback?: string | Callback, maybeCallback?: Callback): void => {
@@ -107,7 +115,6 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
     }
     addChunk(chunk, encoding);
     const body = Buffer.concat(chunks);
-    const headers = getHeaders(res);
     const response: MockResponse = {
       body,
       isUTF8: isUTF8(headers),
