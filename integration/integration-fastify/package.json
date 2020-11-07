@@ -1,0 +1,8 @@
+{
+  "name": "integration-fastify",
+  "version": "1.0.0",
+  "license": "MIT",
+  "devDependencies": {
+    "fastify": "^3.7.0"
+  }
+}
