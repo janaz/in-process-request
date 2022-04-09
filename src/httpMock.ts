@@ -95,13 +95,14 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
   res.setHeader('___internal___', '___internal___');
 
   const originalSetHeader = res.setHeader.bind(res);
-  res.setHeader = (name: string, value: string | number | string[]): void => {
+  res.setHeader = (name: string, value: string | number | string[]): ServerResponse => {
     originalSetHeader(name, value);
     const strVal: string | string[] = (typeof value === 'number') ? String(value) : value;
     headers[name.toLowerCase()] = strVal;
+    return res;
   }
 
-  res.end = (chunkOrCallback?: Chunk | Callback, encodingOrCallback?: string | Callback, maybeCallback?: Callback): void => {
+  res.end = (chunkOrCallback?: Chunk | Callback, encodingOrCallback?: string | Callback, maybeCallback?: Callback): ServerResponse => {
     let encoding: string | undefined = undefined
     let chunk: Chunk | undefined = undefined
     let callback: Callback | undefined = typeof chunkOrCallback === 'function' ? chunkOrCallback : undefined
@@ -128,6 +129,7 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
     if (callback) {
       callback(null);
     }
+    return res;
   }
 
   return res;
