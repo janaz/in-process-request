@@ -5,8 +5,8 @@ import cookieParser from 'cookie-parser';
 const app = express();
 
 app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json() as any);
+app.use(express.urlencoded({ extended: false }) as any);
 
 app.use("/static", express.static(path.join(__dirname, 'public')));
 

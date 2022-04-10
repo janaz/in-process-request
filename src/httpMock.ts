@@ -8,6 +8,9 @@ interface SocketMock {
   readonly encrypted: boolean
   readonly end: () => void
   readonly destroy: (e?: Error) => void
+  readonly readable: boolean
+  readonly on: (event: string, handler: () => void) => void
+  readonly removeListener: (event: string, handler: () => void) => void
 }
 
 export interface MockRequestOptions {
@@ -142,6 +145,9 @@ export const createMockRequest = (opts: MockRequestOptions): IncomingMessage => 
     encrypted: opts.ssl ? true : false,
     end: () => {},
     destroy: () => {},
+    readable: true,
+    on: () => undefined,
+    removeListener: () => undefined,
   }
   const body = toBuffer(opts.body);
   const contentLength = Buffer.byteLength(body);

@@ -1,11 +1,11 @@
 import handler from '../../../src/handler';
-import app = require('../app');
+import * as app from '../app';
 import { promisify } from 'util';
 import zlib from 'zlib';
 
 const gunzip = promisify<Buffer, Buffer>(zlib.gunzip)
 
-const H = handler(app as any);
+const H = handler((app as any).default);
 
 describe('handler function', () => {
   it('returns 404 if not found', async () => {

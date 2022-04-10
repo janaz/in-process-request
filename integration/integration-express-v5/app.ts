@@ -6,8 +6,8 @@ import compression from 'compression';
 const app = express();
 
 app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json() as any);
+app.use(express.urlencoded({ extended: false }) as any);
 
 app.use("/static", compression(), express.static(path.join(__dirname, 'public')));
 
