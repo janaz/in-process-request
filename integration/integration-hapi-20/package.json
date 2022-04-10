@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "license": "MIT",
   "devDependencies": {
-    "@hapi/hapi": "^20.0.0"
+    "@hapi/hapi": "^20.2.1"
   }
 }

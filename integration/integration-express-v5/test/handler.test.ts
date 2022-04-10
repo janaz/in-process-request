@@ -71,7 +71,7 @@ describe('handler function', () => {
     };
     const res = await H(reqOptions);
     expect(res.statusCode).toEqual(200);
-    expect(res.headers['content-type']).toEqual('text/plain; charset=UTF-8');
+    expect(res.headers['content-type']).toEqual('text/plain; charset=utf-8');
     expect(res.body.toString()).toEqual('hello world\n');
   })
 
@@ -99,7 +99,7 @@ describe('handler function', () => {
 
     const res = await H(reqOptions);
     expect(res.statusCode).toEqual(200);
-    expect(res.headers['content-type']).toEqual('text/html; charset=UTF-8');
+    expect(res.headers['content-type']).toEqual('text/html; charset=utf-8');
     expect(res.headers['content-encoding']).toEqual('gzip');
     expect(res.isUTF8).toEqual(false);
     const body = await gunzip(res.body);
