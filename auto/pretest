@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 npm ci --prefix integration/integration-fastify
+npm ci --prefix integration/integration-fastify-v4
 npm ci --prefix integration/integration-apollo
 npm ci --prefix integration/integration-connect
 npm ci --prefix integration/integration-express

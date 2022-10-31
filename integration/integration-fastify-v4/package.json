@@ -1,0 +1,12 @@
+{
+  "name": "integration-fastify",
+  "version": "1.0.0",
+  "license": "MIT",
+  "devDependencies": {
+    "fastify": "^4.9.2"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^8.3.0",
+    "@fastify/static": "^6.5.0"
+  }
+}
