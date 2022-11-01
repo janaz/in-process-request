@@ -1,0 +1,10 @@
+node_modules
+coverage
+.vscode
+package-lock.json
+build
+dist
+public
+views
+
+

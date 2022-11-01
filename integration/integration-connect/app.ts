@@ -1,20 +1,21 @@
-import connect from 'connect';
-import path from 'path';
-import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
-import serveStatic from 'serve-static';
-import { OutgoingMessage } from 'http';
+import connect from "connect"
+import path from "path"
+import cookieParser from "cookie-parser"
+import bodyParser from "body-parser"
+import serveStatic from "serve-static"
+import { OutgoingMessage } from "http"
 
-const app = connect();
+const app = connect()
 
-app.use(cookieParser() as any);
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser() as any)
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 
-app.use("/static", serveStatic(path.join(__dirname, 'public')) as any);
+app.use("/static", serveStatic(path.join(__dirname, "public")) as any)
 app.use("/reflect", (req: any, res: OutgoingMessage) => {
-  res.setHeader("content-type", "application/json");
-  res.end(JSON.stringify({
+  res.setHeader("content-type", "application/json")
+  res.end(
+    JSON.stringify({
       body: req.body,
       cookies: req.cookies,
       fresh: req.fresh,
@@ -34,8 +35,9 @@ app.use("/reflect", (req: any, res: OutgoingMessage) => {
       baseUrl: req.baseUrl,
       path: req.path,
       url: req.url,
-      xForwardedFor: req.headers['x-forwarded-for'],
-  }))
-});
+      xForwardedFor: req.headers["x-forwarded-for"],
+    })
+  )
+})
 
-module.exports = app;
+module.exports = app

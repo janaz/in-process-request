@@ -1,35 +1,36 @@
-import handler from '../../../src/handler';
-import app = require('../app');
+import handler from "../../../src/handler"
+import app = require("../app")
 
-const H = handler(app);
+const H = handler(app)
 
-describe('handler function', () => {
-  it('responds to a graphql query', async () => {
+describe("handler function", () => {
+  it("responds to a graphql query", async () => {
     const reqOptions = {
-      method: 'POST',
-      path: '/graphql',
+      method: "POST",
+      path: "/graphql",
       headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
       body: JSON.stringify({
-        query: 'query {books {author}}'
-      })
-    };
-    const res = await H(reqOptions);
-    expect(res.statusCode).toEqual(200);
+        query: "query {books {author}}",
+      }),
+    }
+    const res = await H(reqOptions)
+    expect(res.statusCode).toEqual(200)
     const json = JSON.parse(res.body.toString())
     expect(json).toEqual({
       data: {
         books: [
           {
             author: "J.K. Rowling",
-          }, {
+          },
+          {
             author: "Michael Crichton",
-          }
+          },
         ],
       },
-    });
+    })
   })
 })
 

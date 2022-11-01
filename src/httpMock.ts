@@ -1,4 +1,9 @@
-import { IncomingHttpHeaders, OutgoingHttpHeaders, ServerResponse, IncomingMessage } from 'http';
+import {
+  IncomingHttpHeaders,
+  OutgoingHttpHeaders,
+  ServerResponse,
+  IncomingMessage,
+} from "http"
 
 type Chunk = string | Buffer | undefined
 type Callback = (error: Error | null | undefined) => void
@@ -24,101 +29,125 @@ export interface MockRequestOptions {
 }
 
 export interface MockResponse {
-  body: Buffer,
-  isUTF8: boolean,
-  statusCode: number,
-  statusMessage: string,
-  headers: OutgoingHttpHeaders,
+  body: Buffer
+  isUTF8: boolean
+  statusCode: number
+  statusMessage: string
+  headers: OutgoingHttpHeaders
 }
 
 interface ObjectWithStringKeys<T> {
-  [key: string]: T;
+  [key: string]: T
 }
 
-const keysToLowerCase = <T>(headers: ObjectWithStringKeys<T>): ObjectWithStringKeys<T> => {
-  const lowerCaseHeaders: ObjectWithStringKeys<T> = {};
-  Object.keys(headers).forEach(k => {
-    lowerCaseHeaders[k.toLowerCase()] = headers[k];
-  });
-  return lowerCaseHeaders;
+const keysToLowerCase = <T>(
+  headers: ObjectWithStringKeys<T>
+): ObjectWithStringKeys<T> => {
+  const lowerCaseHeaders: ObjectWithStringKeys<T> = {}
+  Object.keys(headers).forEach((k) => {
+    lowerCaseHeaders[k.toLowerCase()] = headers[k]
+  })
+  return lowerCaseHeaders
 }
 
 const getRawHeaders = (headers: IncomingHttpHeaders): string[] => {
-  const rawHeaders: string[] = [];
+  const rawHeaders: string[] = []
   Object.entries(headers).forEach(([key, value]) => {
     if (Array.isArray(value)) {
-      value.forEach(v => {
-        rawHeaders.push(key);
-        rawHeaders.push(v);
+      value.forEach((v) => {
+        rawHeaders.push(key)
+        rawHeaders.push(v)
       })
-    } else if (typeof value === 'string') {
-      rawHeaders.push(key);
-      rawHeaders.push(value);
+    } else if (typeof value === "string") {
+      rawHeaders.push(key)
+      rawHeaders.push(value)
     }
   })
-  return rawHeaders;
+  return rawHeaders
 }
 
 const toBuffer = (param?: string | Buffer, encoding?: string): Buffer => {
   if (Buffer.isBuffer(param)) {
-    return param;
-  } else if (typeof param === 'string') {
-    return Buffer.from(param, encoding as BufferEncoding);
+    return param
+  } else if (typeof param === "string") {
+    return Buffer.from(param, encoding as BufferEncoding)
   } else {
-    return Buffer.alloc(0);
+    return Buffer.alloc(0)
   }
 }
 
 const isUTF8 = (headers: OutgoingHttpHeaders): boolean => {
-  if (headers['content-encoding']) {
-    return false;
+  if (headers["content-encoding"]) {
+    return false
   }
-  const contentType = headers['content-type'] as string || '';
-  return contentType.match(/charset=(utf-8|"utf-8")$/i) ? true : false;
-};
+  const contentType = (headers["content-type"] as string) || ""
+  return contentType.match(/charset=(utf-8|"utf-8")$/i) ? true : false
+}
 
 export const createMockResponse = (req: IncomingMessage): ServerResponse => {
-  const res = new ServerResponse(req);
+  const res = new ServerResponse(req)
   res.shouldKeepAlive = false
-  const chunks: Buffer[] = [];
-  const addChunk = (chunk: Chunk, encoding?: string) => chunks.push(toBuffer(chunk, encoding));
-  const headers: OutgoingHttpHeaders = {};
+  const chunks: Buffer[] = []
+  const addChunk = (chunk: Chunk, encoding?: string) =>
+    chunks.push(toBuffer(chunk, encoding))
+  const headers: OutgoingHttpHeaders = {}
 
-  res.write = (chunk: Chunk, encodingOrCallback?: string | Callback, maybeCallback?: Callback) => {
-    const encoding: string | Callback | undefined = typeof encodingOrCallback === 'string' ? encodingOrCallback : undefined;
-    const callback: Callback | undefined = typeof maybeCallback === 'function' ?
-      maybeCallback: (typeof encodingOrCallback === 'function' ? encodingOrCallback : undefined);
-    addChunk(chunk, encoding);
+  res.write = (
+    chunk: Chunk,
+    encodingOrCallback?: string | Callback,
+    maybeCallback?: Callback
+  ) => {
+    const encoding: string | Callback | undefined =
+      typeof encodingOrCallback === "string" ? encodingOrCallback : undefined
+    const callback: Callback | undefined =
+      typeof maybeCallback === "function"
+        ? maybeCallback
+        : typeof encodingOrCallback === "function"
+        ? encodingOrCallback
+        : undefined
+    addChunk(chunk, encoding)
     if (callback) {
-      callback(null);
+      callback(null)
     }
-    return true;
+    return true
   }
 
-  res.setHeader('___internal___', '___internal___');
+  res.setHeader("___internal___", "___internal___")
 
-  const originalSetHeader = res.setHeader.bind(res);
-  res.setHeader = (name: string, value: string | number | string[]): ServerResponse => {
-    originalSetHeader(name, value);
-    const strVal: string | string[] = (typeof value === 'number') ? String(value) : value;
-    headers[name.toLowerCase()] = strVal;
-    return res;
+  const originalSetHeader = res.setHeader.bind(res)
+  res.setHeader = (
+    name: string,
+    value: string | number | string[]
+  ): ServerResponse => {
+    originalSetHeader(name, value)
+    const strVal: string | string[] =
+      typeof value === "number" ? String(value) : value
+    headers[name.toLowerCase()] = strVal
+    return res
   }
 
-  res.end = (chunkOrCallback?: Chunk | Callback, encodingOrCallback?: string | Callback, maybeCallback?: Callback): ServerResponse => {
+  res.end = (
+    chunkOrCallback?: Chunk | Callback,
+    encodingOrCallback?: string | Callback,
+    maybeCallback?: Callback
+  ): ServerResponse => {
     let encoding: string | undefined = undefined
     let chunk: Chunk | undefined = undefined
-    let callback: Callback | undefined = typeof chunkOrCallback === 'function' ? chunkOrCallback : undefined
+    let callback: Callback | undefined =
+      typeof chunkOrCallback === "function" ? chunkOrCallback : undefined
     if (!callback) {
       chunk = chunkOrCallback as Chunk | undefined
-      callback = typeof encodingOrCallback === 'function' ? encodingOrCallback : undefined
+      callback =
+        typeof encodingOrCallback === "function"
+          ? encodingOrCallback
+          : undefined
     }
     if (!callback) {
       encoding = encodingOrCallback as string | undefined
       callback = maybeCallback
     }
-    addChunk(chunk, encoding);
-    const body = Buffer.concat(chunks);
+    addChunk(chunk, encoding)
+    const body = Buffer.concat(chunks)
     const response: MockResponse = {
       body,
       isUTF8: isUTF8(headers),
@@ -126,21 +155,23 @@ export const createMockResponse = (req: IncomingMessage): ServerResponse => {
       statusMessage: res.statusMessage,
       headers,
     }
-    res.emit('prefinish');
-    res.emit('finish');
-    res.emit('__mock_response', response);
+    res.emit("prefinish")
+    res.emit("finish")
+    res.emit("__mock_response", response)
     if (callback) {
-      callback(null);
+      callback(null)
     }
-    return res;
+    return res
   }
 
-  return res;
+  return res
 }
 
-export const createMockRequest = (opts: MockRequestOptions): IncomingMessage => {
+export const createMockRequest = (
+  opts: MockRequestOptions
+): IncomingMessage => {
   const socket: SocketMock = {
-    remoteAddress: opts.remoteAddress || '123.123.123.123',
+    remoteAddress: opts.remoteAddress || "123.123.123.123",
     remotePort: opts.remotePort || 5757,
     encrypted: opts.ssl ? true : false,
     end: () => {},
@@ -149,30 +180,30 @@ export const createMockRequest = (opts: MockRequestOptions): IncomingMessage => 
     on: () => undefined,
     removeListener: () => undefined,
   }
-  const body = toBuffer(opts.body);
-  const contentLength = Buffer.byteLength(body);
+  const body = toBuffer(opts.body)
+  const contentLength = Buffer.byteLength(body)
 
-  const req = new IncomingMessage(socket as any);
+  const req = new IncomingMessage(socket as any)
 
-  req.method = (opts.method || 'GET').toUpperCase();
-  req.url = opts.path;
-  req.headers = keysToLowerCase(opts.headers || {});
-  req.rawHeaders = getRawHeaders(opts.headers || {});
-  req.httpVersionMajor = 1;
-  req.httpVersionMinor = 1;
-  req.httpVersion = '1.1';
+  req.method = (opts.method || "GET").toUpperCase()
+  req.url = opts.path
+  req.headers = keysToLowerCase(opts.headers || {})
+  req.rawHeaders = getRawHeaders(opts.headers || {})
+  req.httpVersionMajor = 1
+  req.httpVersionMinor = 1
+  req.httpVersion = "1.1"
 
-  if (contentLength > 0 && !req.headers['content-length']) {
-    req.headers['content-length'] = contentLength.toString();
-    req.rawHeaders.push('content-length')
+  if (contentLength > 0 && !req.headers["content-length"]) {
+    req.headers["content-length"] = contentLength.toString()
+    req.rawHeaders.push("content-length")
     req.rawHeaders.push(contentLength.toString())
   }
 
   req._read = () => {
     if (contentLength > 0) {
-      req.push(body);
+      req.push(body)
     }
-    req.push(null);
+    req.push(null)
   }
-  return req;
+  return req
 }

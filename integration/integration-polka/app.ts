@@ -1,19 +1,20 @@
-import polka from 'polka';
-import path from 'path';
-import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
-import serveStatic from 'serve-static';
+import polka from "polka"
+import path from "path"
+import cookieParser from "cookie-parser"
+import bodyParser from "body-parser"
+import serveStatic from "serve-static"
 
-const app = polka();
+const app = polka()
 
-app.use(cookieParser() as any);
-app.use(bodyParser.json() as any);
-app.use(bodyParser.urlencoded({ extended: false }) as any);
+app.use(cookieParser() as any)
+app.use(bodyParser.json() as any)
+app.use(bodyParser.urlencoded({ extended: false }) as any)
 
-app.use("/static", serveStatic(path.join(__dirname, 'public')) as any);
+app.use("/static", serveStatic(path.join(__dirname, "public")) as any)
 app.use("/reflect", (req, res) => {
-  res.setHeader("content-type", "application/json");
-  res.end(JSON.stringify({
+  res.setHeader("content-type", "application/json")
+  res.end(
+    JSON.stringify({
       body: req.body,
       cookies: req.cookies,
       fresh: req.fresh,
@@ -33,8 +34,9 @@ app.use("/reflect", (req, res) => {
       baseUrl: req.baseUrl,
       path: req.path,
       url: req.url,
-      xForwardedFor: req.headers['x-forwarded-for'],
-  }))
-});
+      xForwardedFor: req.headers["x-forwarded-for"],
+    })
+  )
+})
 
-module.exports = app.handler.bind(app);
+module.exports = app.handler.bind(app)
