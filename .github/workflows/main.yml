@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ["10", "12", "14", "16", "18", "19"]
+        node: ["14", "16", "18", "19"]
     name: Node ${{ matrix.node }}
 
     steps:

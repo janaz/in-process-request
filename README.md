@@ -23,10 +23,10 @@ It supports the following frameworks
 
 It has been tested with the following node versions
 
-- v10
-- v12
 - v14
-- v15
+- v16
+- v18
+- v19
 
 ## Usage
 
