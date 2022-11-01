@@ -9,6 +9,7 @@ import {
 import { HapiListener } from "./hapiListener"
 import nestHandler from "./nestHandler"
 import fastifyHandler from "./fastifyHandler"
+import fastifyV4Handler from "./fastifyV4Handler"
 
 declare namespace handler {
   type InProcessRequestOptions = MockRequestOptions
@@ -27,5 +28,6 @@ const handler = (app: RequestListener) => (reqOptions: MockRequestOptions) => {
 handler.HapiListener = HapiListener
 handler.nestHandler = nestHandler
 handler.fastifyHandler = fastifyHandler
+handler.fastifyV4Handler = fastifyV4Handler
 
 export = handler
