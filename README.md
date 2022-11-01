@@ -18,6 +18,7 @@ It supports the following frameworks
 - Koa v2
 - Polka
 - Fastify v3
+- Fastify v4
 - More to come...
 
 It has been tested with the following node versions
@@ -226,7 +227,7 @@ getApp().then((myApp) => {
 })
 ```
 
-### Fastify example
+### Fastify v3 example
 
 This library provides an adapter for retrieving the underlying NodeJS server handler
 
@@ -264,6 +265,41 @@ inProcessRequest
     })
   })
 ```
+
+### Fastify v4 example
+
+This library provides an adapter for retrieving the underlying NodeJS server handler
+
+```javascript
+const fastify = require("fastify")
+const inProcessRequest = require("in-process-request")
+
+const app = fastify({ logger: false })
+app.get("/", (_request, _reply) => {
+  return { hello: "world" }
+})
+
+inProcessRequest
+  .fastifyV4Handler(app)
+  .then((myApp) => {
+    // The server is initialized and we have access to the request handler - myApp
+    const myAppHandler = inProcessRequest(myApp)
+
+    const requestOptions = {
+      path: "/",
+      method: "GET",
+    }
+
+    myAppHandler(requestOptions).then((response) => {
+      console.log("Body", response.body)
+      console.log("Headers", response.headers)
+      console.log("Status Code", response.statusCode)
+      console.log("Status Message", response.statusMessage)
+      console.log("Is UTF8 body?", response.isUTF8)
+    })
+  })
+```
+
 
 ### Polka example
 
